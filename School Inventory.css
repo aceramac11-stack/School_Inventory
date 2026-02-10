@@ -1,0 +1,377 @@
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url('MHS.png');
+    background-position: center;
+    background-color: rgba(0,0,0,0.2);
+    background-blend-mode: multiply;
+    background-attachment: fixed;
+    background-size: cover;
+    background-repeat: no-repeat;
+    color: #333;
+}
+
+.banner {
+    display: flex;
+    align-items: center;
+    padding: 20px 40px;
+    background-image: url('ace.png');
+    background-position: center top;
+    background-color: rgba(0,0,0,0.2);
+    background-blend-mode: multiply;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    color: white;
+}
+
+.banner img {
+    width: 100px;
+    height: auto;
+    margin-right: 20px;
+}
+.banner .school-info h1 {
+    margin: 0;
+        font-size: 36px;
+    line-height: 1.2;
+}
+
+.banner hr {
+    border: 1px solid #fff;
+    margin: 5px 0;
+    opacity: 0.7;
+}
+.banner .school-info p {
+    margin: 0;
+    font-size: 18px;
+    opacity: 0.85;
+}
+nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: maroon;
+    padding: 15px 40px;
+    border-bottom: 3px solid #600000;
+}
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+nav li {
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+    padding: 6px 12px;
+    border-radius: 5px;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+}
+nav a:hover {
+    background-color: rgba(255,255,255, 0.2);
+    transform: translateY(-2px);
+    
+}
+.search-bar {
+    margin-left: 10px;
+}
+.search-bar input[type="text"] {
+    padding: 6px 10px;
+    border-radius: 5px;
+    border: none;
+    font-size: 16px;
+}
+@media (max-width: 1024px) {
+    .banner, nav {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    nav ul {
+        flex-direction: column;
+        transition: all 0.3s ease;
+        gap: 10px;
+    }
+    .search-bar {
+        margin-left: 0;
+        margin-top: 10px;
+        width: 100%;
+    }
+}
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 200px);
+    text-align: center;
+    color: white;
+}
+main h2 {
+    font-size: 32px;
+    margin-bottom: 10px;
+    color: maroon;
+    margin-top: 10px;
+}
+main p {
+    font-size: 20px;
+    color: maroon;
+}
+
+.container{
+    background-color: white;
+    color: maroon;
+    padding-top: 35px;
+    padding-bottom: 35px;
+    padding-left: 35px;
+    padding-right: 35px;
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    justify-content: flex-end; 
+    border-radius: 10px;
+}
+button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+.h1 {
+    color: maroon;
+    text-align: center;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 400px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 5px 5px;
+    width: 36%;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    font-size: 14px;
+    font-weight:bold;
+}
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+.add-btn, .savebtn, .export-btn, .delete-btn {
+    background: linear-gradient(45deg, maroon, #a00000);
+    color: white;
+}
+.add-btn:hover, .savebtn:hover, .export-btn:hover, .delete-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+table {
+    width: 100%;
+    max-width: 1100px;
+    border-collapse: collapse;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.95);
+    animation: slideUp 0.8s ease-out;
+    margin: 0 auto; /* Centers the table horizontally */
+}
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0;}
+    to { transform: translateY(0); opacity: 1;}
+}
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    border: 2px solid maroon;
+
+}
+th {
+    background: linear-gradient(90deg, maroon, #a00000);
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+}
+tr td:nth-child(2) {
+    text-align: center;
+}
+tbody tr:nth-child(even) {
+    background-color: rgba(200,0,0,0.2);
+}
+tbody tr:hover {
+    background-color: rgba(128,0,0,0.1);
+    transition: background-color 0.3s;
+}
+td [contenteditable="true"] {
+    background-color: #f9f9f9;
+    cursor: text;
+    border-radius: 8px;
+}
+td [contenteditable="true"]:hover {
+    background-color: #fff;
+    outline: 2px solid #800000;
+    box-shadow: 0 0 5px rgba(128,0,0,0.5);
+}
+@media (max-width=1024px) {
+    table {
+        font-size: 14px;
+    }
+    th, td  {
+        padding: 10px;
+    }
+    .controls {flex-direction: column;
+        align-items: stretch;
+    }
+    .controls button {
+        width: 100%;
+        justify-content: center;
+    }
+    nav ul {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    h1 {
+        font-size: 24px;
+        padding: 10px 15px;
+    }
+}
+@media (max-width=600px) {
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    th, td {
+        padding: 8ps;
+        font-size: 12px;
+    }
+    .controls {
+        flex-direction: row;
+        overflow-x: auto;
+        gap: 10px;
+        padding: 5px 0;
+    }
+    .controls button {
+        flex: 0 0 auto;
+        min-width: 120px;
+    }
+    h1 {
+        font-size: 20px;
+    }
+    nav ul {
+        gap: 8px;
+    }
+    body {
+        padding-top: 120px;
+    }
+}
+
+.h11 {
+    color: maroon;
+    text-align: center;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 400px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 5px 5px;
+    width: 15%;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    font-size: 14px;
+    font-weight:bold;
+}
+            /* Dropdown styles */
+            nav ul li {
+                position: relative;
+                
+            }
+            nav ul li .dropdown-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                background-color: #963232;
+                border: 1px solid #ccc;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                z-index: 1000;
+                transition: all 0.5s ease;
+
+            }
+            nav ul li:hover .dropdown-menu {
+                display: block;
+                transition: all 0.5s ease;
+                background-color: white;
+            }
+            nav ul li .dropdown-menu li {
+                width: 200px;
+
+            }
+            nav ul li .dropdown-menu li a {
+                display: block;
+                padding: 10px;
+                text-decoration: none;
+                color: #333;
+                background-color: rgb(231, 196, 196);
+
+            }
+            nav ul li .dropdown-menu li a:hover {
+                background-color: #f0f0f0;
+            }
+            .active { 
+                background-color: maroon;
+            }
+            .dropdown-menu {
+                background-color: white;
+
+            }
+            footer {
+    background: maroon;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    font-size: 14px;
+    margin-top: 20px;
+}
+footer .contact-info {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+footer .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+footer .contact-item i {
+    font-size: 18px;
+}
+footer p {
+    margin: 10px 0 0 0;
+}

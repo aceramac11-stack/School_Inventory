@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" name="viewport" content="width-device-width, initial-scale=1">
+        <title> MHS-ICT LOGIN </title>
+ <script>
+    let table, tbody;
+
+    window.onload = function() {
+        table = document.getElementById('inventoryTable');
+        tbody = table.getElementsByTagName('tbody')[0];
+        loadData();
+        table.addEventListener('input', saveData);
+    };
+
+    function addRow() {
+        const newRow = tbody.insertRow();
+        newRow.innerHTML = `
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>  
+        `;
+        saveData();
+    }
+
+    function deleteRow(button) {
+        const row = button.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+        saveData();
+    }
+
+    function saveData() {
+        const rows = [];
+        for (let i = 0; i < tbody.rows.length; i++) {
+            const cells = tbody.rows[i].cells;
+            rows.push({
+                name: cells[0].innerText,
+                quantity: cells[1].innerText,
+                condition: cells[2].innerText,
+            });
+        }
+        localStorage.setItem('inventoryData', JSON.stringify(rows));
+    }
+
+    function loadData() {
+        let data = localStorage.getItem('inventoryData');
+        if (!data) {
+            // If no saved data, save the initial table data to localStorage
+            saveData();
+            data = localStorage.getItem('inventoryData');
+        }
+        const rows = JSON.parse(data);
+        tbody.innerHTML = "";
+        rows.forEach(row => {
+            const newRow = tbody.insertRow();
+            newRow.innerHTML = `
+                <td contenteditable="true">${row.name || ''}</td>
+                <td contenteditable="true">${row.quantity || ''}</td>
+                <td contenteditable="true">${row.condition || ''}</td>
+            `;
+        });
+        // Ensure exactly 10 rows by adding empty ones if needed
+        while (tbody.rows.length < 10) {
+            const emptyRow = tbody.insertRow();
+            emptyRow.innerHTML = `
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+                <td contenteditable="true"></td>
+            `;
+        }
+    }
+
+    function exportToCSV() {
+        function escapeCSV(value) {
+            return '"' + value.replace(/"/g, '""') + '"';
+        }
+        let csv = 'Item Name,Quantity,Condition\n';
+        for (let i = 0; i < tbody.rows.length; i++) {
+            const cells = tbody.rows[i].cells;
+            csv += `${escapeCSV(cells[0].innerText)},${escapeCSV(cells[1].innerText)},${escapeCSV(cells[2].innerText)}\n`;
+        }
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'inventory.csv';
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+</script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <link rel="stylesheet" href="School Inventory.css">
+    </head>
+    <body>
+        <div class="banner">
+        <img src="123456.png" avatar="MHS LOGO" alt="MHS LOGO">
+        <div class="school-info">
+            <h1>Masagana High School</h1>
+            <hr>
+            <p>Masagana, Pandi, Bulacan</p>
+        </div>
+        </div>
+        <nav><ul>
+                        <li><a href="C:\Users\Admin\Documents\Website ng ICT\Home\HOME.html"><i class="fas fa-home"></i>Home</a></li>
+            <li class="dropdown">
+                    <a href="C:\Users\Admin\Documents\Website ng ICT\SCHOOL INVENTORY\School Inventory.html"><i class="fas fa-boxes"></i>School Inventory</a>
+                    <ul class="dropdown-menu">
+                      <li><a href="C:\Users\Admin\Desktop\Website ng ICT\SCHOOL INVENTORY\School Inventory.html">ICT Equipment</a></li>
+                        <li><a href="C:\Users\Admin\Desktop\Website ng ICT\SCHOOL INVENTORY\SHS-TVL TOOLS AND EQUIPMENT.html">SHS TVL Tools and Equipment</a></li>
+                        <li><a href="C:\Users\Admin\Desktop\Website ng ICT\SCHOOL INVENTORY\SCIENCE AND MATH EQUIPMENT.html">Science and Math Equipment</a></li>
+                        <li><a href="C:\Users\Admin\Desktop\Website ng ICT\SCHOOL INVENTORY\SCHOOL FURNITURE.html">School Furniture</a></li>
+                    </ul>
+                </li>
+                <li><a href="C:\Users\Admin\Documents\Website ng ICT\WEB PAGE NI RONIE\hahaha.html"><i class="fas fa-info-circle"></i>About</a></li>
+                <li><a href="C:\Users\Admin\Documents\Website ng ICT\contact\contact.html"><i class="fas fa-envelope"></i>Contact</a></li>
+            </ul>
+            <div class="search-bar">
+            <input type="text"placeholder="Search"></div>
+            </nav>
+                <div class="h1"><h1><i class="fas fa-boxes"></i> School Inventory System</h1></div>
+                <div class="controls">
+                    <button class="save-btn" onclick="saveData()"><i class="fas fa-save"></i>Save Data</button>
+                    <button class="save-btn" onclick="loadData()"><i class="fas fa-upload"></i>Load Data</button>
+                    <button class="export-btn" onclick="exportToCSV()"><i class="fas fa-download"></i>Export to CSV</button>
+                </div>
+                 <div class="h1"><h1>ICT EQUIPMENT</h1></div>
+                
+                <table id="inventoryTable">
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Quantity</th>
+                            <th>Condition</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 10 fixed rows -->
+                        <tr>
+                            <td contenteditable="false"><b>DCP Batch 2023</b></td>
+                            <td contenteditable="false"></td>
+                            <td contenteditable="false"></td>                        
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">Laptop ACER & accessories</td>
+                            <td contenteditable="false">46</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">Smart TV 58"</td>
+                            <td contenteditable="false">1</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                   
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">Wireless Router</td>
+                            <td contenteditable="false">2</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                      
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">Charging Cart</td>
+                            <td contenteditable="false">2</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                       
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">External Hard Drive</td>
+                            <td contenteditable="false">1</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false"></td>
+                            <td contenteditable="false"></td>
+                            <td contenteditable="false"></td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false"><b>DCP Batch 2022</b></td>
+                            <td contenteditable="false"></td>
+                            <td contenteditable="false"></td>
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">Laptop ASUS & accesories</td>
+                            <td contenteditable="false">46</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">Smart TV 58"</td>
+                            <td contenteditable="false">1</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">Wireless Router</td>
+                            <td contenteditable="false">2</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                        <tr>            
+                            <td contenteditable="false">Charging Cart</td>
+                            <td contenteditable="false">2</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">External Hard Drive</td>
+                            <td contenteditable="false">1</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false"></td>
+                            <td contenteditable="false"></td>
+                            <td contenteditable="false"></td>                         
+                        </tr>
+                                                <tr>
+                            <td contenteditable="false"><b>Provincial Government of Bulacan</b></td>
+                            <td contenteditable="false"></td>
+                            <td contenteditable="false"></td>                         
+                        </tr>
+                                                <tr>
+                            <td contenteditable="false">65" Interactive Smart Board</td>
+                            <td contenteditable="false">1</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                                                <tr>
+                            <td contenteditable="false"></td>
+                            <td contenteditable="false"></td>
+                            <td contenteditable="false"></td>                         
+                        </tr>
+                                                <tr>
+                            <td contenteditable="false"><b>DCP 2020</b></td>
+                            <td contenteditable="false"></td>
+                            <td contenteditable="false"></td>                         
+                        </tr>
+                                                <tr>
+                            <td contenteditable="false">Laptop</td>
+                            <td contenteditable="false">1</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                                                <tr>
+                            <td contenteditable="false">Smart TV 55"</td>
+                            <td contenteditable="false">1</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                                                <tr>
+                            <td contenteditable="false">Lapel</td>
+                            <td contenteditable="false">1</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false"></td>
+                            <td contenteditable="false"></td>
+                            <td contenteditable="false"></td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false"><b>DCP TVL</b></td>
+                            <td contenteditable="false"></td>
+                            <td contenteditable="false"></td>                         
+                        </tr>
+                                                <tr>
+                            <td contenteditable="false">Laptop</td>
+                            <td contenteditable="false">1</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                                                <tr>
+                            <td contenteditable="false">Smart TV 55"</td>
+                            <td contenteditable="false">1</td>
+                            <td contenteditable="false">Operational and in Good Condition</td></td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">Lapel</td>
+                            <td contenteditable="false">1</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false"></td>
+                            <td contenteditable="false"></td>
+                            <td contenteditable="false"></td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false"><b>DCP Batch 36</b></td>
+                            <td contenteditable="false"></td>
+                            <td contenteditable="false"></td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">Host PC</td>
+                            <td contenteditable="false">3</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">UPS</td>
+                            <td contenteditable="false">3</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">AVR</td>
+                            <td contenteditable="false">7</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">Networking SW Cable</td>
+                            <td contenteditable="false">7</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">Thin Client Terminal Access Drive</td>
+                            <td contenteditable="false">42</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">Desktop Virtualization Device</td>
+                            <td contenteditable="false">42</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">Projector</td>
+                            <td contenteditable="false">2</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                        
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">Laptop</td>
+                            <td contenteditable="false">2</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">Multimedia Speaker</td>
+                            <td contenteditable="false">1</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                        
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">External Optical Drive</td>
+                            <td contenteditable="false">1</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">3-in-1 Multifunction InkJet Printer</td>
+                            <td contenteditable="false">1</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false"></td>
+                            <td contenteditable="false"></td>
+                            <td contenteditable="false"></td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false"><b>ETEXTBOOK</b></td>
+                            <td contenteditable="false"></td>
+                            <td contenteditable="false"></td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">Acer Laptop</td>
+                            <td contenteditable="false">1</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">Acer One Tablet w/ Accessories</td>
+                            <td contenteditable="false">50</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">Acer Optical Drive</td>
+                            <td contenteditable="false">1</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">Wireless Router</td>
+                            <td contenteditable="false">1</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false"></td>
+                            <td contenteditable="false"></td>
+                            <td contenteditable="false"></td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false"><b>Printers</b></td>
+                            <td contenteditable="false"></td>
+                            <td contenteditable="false"></td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">EPSON L3120</td>
+                            <td contenteditable="false">8</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">Epson L3110</td>
+                            <td contenteditable="false">3</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">Hp Smart Tank 210</td>
+                            <td contenteditable="false">2</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">Dot Matrix Printer (Epson LX310)</td>
+                            <td contenteditable="false">2</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">Brother DCP T710W</td>
+                            <td contenteditable="false">1</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">Brother DCP L2550DW</td>
+                            <td contenteditable="false">2</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">Brother DCP-L2540DW</td>
+                            <td contenteditable="false">3</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                        <tr>
+                            <td contenteditable="false">RISO Xerox</td>
+                            <td contenteditable="false">1</td>
+                            <td contenteditable="false">Operational and in Good Condition</td>                         
+                        </tr>
+                    </tbody>
+                </table>
+            </body>
+                <footer class="footer">
+                    <h2></h2>
+                </footer>
+</html>
