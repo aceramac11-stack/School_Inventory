@@ -3,352 +3,340 @@
     <head>
         <meta charset="utf-8" name="viewport" content="width-device-width, initial-scale=1">
         <title> MHS-ICT LOGIN </title>
-<script>
-    let table, tbody;
+        <script>
+            let table, tbody;
 
-    window.onload = function() {
-        table = document.getElementById('inventoryTable');
-        tbody = table.getElementsByTagName('tbody')[0];
-        loadData();
-        table.addEventListener('input', saveData);
-    };
+            window.onload = function() {
+                table = document.getElementById('inventoryTable');
+                tbody = table.getElementsByTagName('tbody')[0];
 
-    function addRow() {
-        const newRow = tbody.insertRow();
-        newRow.innerHTML = `
-            <td contenteditable="true"></td>
-            <td contenteditable="true"></td>
-            <td contenteditable="true"></td>  
-        `;
-        saveData();
-    }
+                // Only load saved data if it exists
+                if (localStorage.getItem('scienceMathEquipmentData')) {
+                    loadData();
+                }
+            };
 
-    function deleteRow(button) {
-        const row = button.parentNode.parentNode;
-        row.parentNode.removeChild(row);
-        saveData();
-    }
+            function saveData() {
+                const rows = [];
 
-    function saveData() {
-        const rows = [];
-        for (let i = 0; i < tbody.rows.length; i++) {
-            const cells = tbody.rows[i].cells;
-            rows.push({
-                name: cells[0].innerText,
-                quantity: cells[1].innerText,
-                condition: cells[2].innerText,
-            });
-        }
-        localStorage.setItem('inventoryData', JSON.stringify(rows));
-    }
+                for (let i = 0; i < tbody.rows.length; i++) { // Include all rows, including the title row
+                    const cells = tbody.rows[i].cells;
 
-    function loadData() {
-        let data = localStorage.getItem('inventoryData');
-        if (!data) {
-            // If no saved data, save the initial table data to localStorage
-            saveData();
-            data = localStorage.getItem('inventoryData');
-        }
-        const rows = JSON.parse(data);
-        tbody.innerHTML = "";
-        rows.forEach(row => {
-            const newRow = tbody.insertRow();
-            newRow.innerHTML = `
-                <td contenteditable="true">${row.name || ''}</td>
-                <td contenteditable="true">${row.quantity || ''}</td>
-                <td contenteditable="true">${row.condition || ''}</td>
-            `;
-        });
-        // Ensure exactly 10 rows by adding empty ones if needed
-        while (tbody.rows.length < 10) {
-            const emptyRow = tbody.insertRow();
-            emptyRow.innerHTML = `
-                <td contenteditable="true"></td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true"></td>
-            `;
-        }
-    }
+                    rows.push({
+                        name: cells[0].innerText.trim(),
+                        quantity: cells[1].innerText.trim(),
+                        condition: cells[2].innerText.trim()
+                    });
+                }
 
-    function exportToCSV() {
-        function escapeCSV(value) {
-            return '"' + value.replace(/"/g, '""') + '"';
-        }
-        let csv = 'Item Name,Quantity,Condition\n';
-        for (let i = 0; i < tbody.rows.length; i++) {
-            const cells = tbody.rows[i].cells;
-            csv += `${escapeCSV(cells[0].innerText)},${escapeCSV(cells[1].innerText)},${escapeCSV(cells[2].innerText)}\n`;
-        }
-        const blob = new Blob([csv], { type: 'text/csv' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'inventory.csv';
-        a.click();
-        URL.revokeObjectURL(url);
-    }
-</script>
+                localStorage.setItem('scienceMathEquipmentData', JSON.stringify(rows));
+            }
+
+            function loadData() {
+                const data = localStorage.getItem('scienceMathEquipmentData');
+                if (!data) return;
+
+                const rows = JSON.parse(data);
+
+                // Clear the tbody and rebuild it entirely
+                tbody.innerHTML = '';
+
+                rows.forEach((row, index) => {
+                    const newRow = tbody.insertRow();
+                    // Make the first row (title row) non-editable, others editable
+                    const editable = index === 0 ? 'false' : 'true';
+                    newRow.innerHTML = `
+                        <td contenteditable="${editable}">${row.name}</td>
+                        <td contenteditable="${editable}">${row.quantity}</td>
+                        <td contenteditable="${editable}">${row.condition}</td>
+                    `;
+                });
+            }
+
+            function exportToCSV() {
+                function escapeCSV(value) {
+                    return '"' + value.replace(/"/g, '""') + '"';
+                }
+
+                let csv = 'Item Name,Quantity,Condition\n';
+
+                for (let i = 1; i < tbody.rows.length; i++) { // skip title row
+                    const cells = tbody.rows[i].cells;
+                    csv += `${escapeCSV(cells[0].innerText)},${escapeCSV(cells[1].innerText)},${escapeCSV(cells[2].innerText)}\n`;
+                }
+
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'inventory.csv';
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+        </script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
         <link rel="stylesheet" href="School Inventory.css">
     </head>
     <body>
         <div class="banner">
-        <img src="123456.png" avatar="MHS LOGO" alt="MHS LOGO">
-        <div class="school-info">
-            <h1>Masagana High School</h1>
-            <hr>
-            <p>Masagana, Pandi, Bulacan</p>
+            <img src="123456.png" avatar="MHS LOGO" alt="MHS LOGO">
+            <div class="school-info">
+                <h1>Masagana High School</h1>
+                <hr>
+                <p>Masagana, Pandi, Bulacan</p>
+            </div>
         </div>
-        </div>
-        <nav><ul>
-                        <li><a href="C:\Users\Admin\Documents\Website ng ICT\Home\HOME.html"><i class="fas fa-home"></i>Home</a></li>
-            <li class="dropdown">
-                    <a href="/School_Inventory/School Inventory.html"><i class="fas fa-boxes"></i>School Inventory</a>
+        <nav>
+            <ul>
+                <li><a href="C:\Users\Admin\Documents\Website ng ICT\Home\HOME.html"><i class="fas fa-home"></i>Home</a></li>
+                <li class="dropdown">
+                    <a href="C:\Users\Admin\Desktop\SCHOOL INVENTORY\School Inventory.html"><i class="fas fa-boxes"></i>School Inventory</a>
                     <ul class="dropdown-menu">
-                        <li><a href="/School_Inventory/School Inventory.html">ICT Equipment</a></li>
-                        <li><a href="/School_Inventory/SHS-TVL TOOLS AND EQUIPMENT.html">SHS TVL Tools and Equipment</a></li>
-                        <li><a href="/School_Inventory/SCIENCE AND MATH EQUIPMENT.html">Science and Math Equipment</a></li>
-                        <li><a href="/School_Inventory/SCHOOL FURNITURE.html">School Furniture</a></li>
+                        <li><a href="C:\Users\Admin\Desktop\SCHOOL INVENTORY\School Inventory.html">ICT Equipment</a></li>
+                        <li><a href="C:\Users\Admin\Desktop\SCHOOL INVENTORY\SHS-TVL TOOLS AND EQUIPMENT.html">SHS TVL Tools and Equipment</a></li>
+                        <li><a href="C:\Users\Admin\Desktop\SCHOOL INVENTORY\SCIENCE AND MATH EQUIPMENT.html">Science and Math Equipment</a></li>
+                        <li><a href="C:\Users\Admin\Desktop\SCHOOL INVENTORY\SCHOOL FURNITURE.html">School Furniture</a></li>
                     </ul>
                 </li>
                 <li><a href="C:\Users\Admin\Documents\Website ng ICT\WEB PAGE NI RONIE\hahaha.html"><i class="fas fa-info-circle"></i>About</a></li>
                 <li><a href="C:\Users\Admin\Documents\Website ng ICT\contact\contact.html"><i class="fas fa-envelope"></i>Contact</a></li>
             </ul>
             <div class="search-bar">
-            <input type="text"placeholder="Search"></div>
-            </nav>
-                <div class="h1"><h1><i class="fas fa-boxes"></i>School Inventory System</h1></div>
-                <div class="controls">
-                    <button class="save-btn" onclick="saveData()"><i class="fas fa-save"></i>Save Data</button>
-                    <button class="save-btn" onclick="loadData()"><i class="fas fa-upload"></i>Load Data</button>
-                    <button class="export-btn" onclick="exportToCSV()"><i class="fas fa-download"></i>Export to CSV</button>
+                <input type="text" placeholder="Search">
+            </div>
+        </nav>
+        <div class="h1">
+            <h1><i class="fas fa-boxes"></i>School Inventory System</h1>
+        </div>
+        <div class="controls">
+            <button class="save-btn" onclick="saveData()"><i class="fas fa-save"></i>Save Data</button>
+            <button class="save-btn" onclick="loadData()"><i class="fas fa-upload"></i>Load Data</button>
+            <button class="export-btn" onclick="exportToCSV()"><i class="fas fa-download"></i>Export to CSV</button>
+        </div>
+        <div class="h1">
+            <h1>SCIENCE AND MATH EQUIPMENT</h1>
+        </div>
+        <table id="inventoryTable">
+            <thead>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Quantity</th>
+                    <th>Condition</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td contenteditable="false"><b>SCIENCE AND MATH EQUIPMENT</b></td>
+                    <td contenteditable="false"></td>
+                    <td contenteditable="false"></td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Hand Lens, 10x Magnification</td>
+                    <td contenteditable="true">8</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Hand Lens, at least 5x Magnification</td>
+                    <td contenteditable="true">16</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Rock Samples Box with Minerals of 3 Rock types</td>
+                    <td contenteditable="true">2</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Balance, Triple Beam, 2610g cap.</td>
+                    <td contenteditable="true">9</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Cork Stopper for Ø 16mm Test Tube</td>
+                    <td contenteditable="true">40</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Rubber Stopper for Ø 16mm Test Tube</td>
+                    <td contenteditable="true">40</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Rubber Stopper #6 with 2 Holes</td>
+                    <td contenteditable="true">16</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Filter Paper, ordinary, 24" by 24" (600mm by 600mm) Sheet</td>
+                    <td contenteditable="true">25</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Litmus Paper Strips, Blue, 100's/vial</td>
+                    <td contenteditable="true">2</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Litmus Paper Strips, Red, 100's/vial</td>
+                    <td contenteditable="true">2</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Hand Gloves, Acid/Solvent-resistant, Super Nitrlle</td>
+                    <td contenteditable="true">16</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Safety Goggles, Polycarbonate</td>
+                    <td contenteditable="true">16</td>
+                    <td contenteditable="true">Not Delivered</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Microscope, Compound</td>
+                    <td contenteditable="true">16</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Dissecting Tool Set</td>
+                    <td contenteditable="true">8</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Model, Human Torso</td>
+                    <td contenteditable="true">1</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Glass Slides, 72's Box</td>
+                    <td contenteditable="true">2</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Glass Cover Slips, 100's Box</td>
+                    <td contenteditable="true">2</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Test Tube, Ø 16mm x 150mm long, borosilicate</td>
+                    <td contenteditable="true">40</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Evaporating Dish, 75ml. cap.</td>
+                    <td contenteditable="true">8</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Glass Funnel</td>
+                    <td contenteditable="true">8</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Petri Dish</td>
+                    <td contenteditable="true">40</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Beaker, 250ml., borosilicate</td>
+                    <td contenteditable="true">16</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Alcohol Thermometer, -20°C to 110°C</td>
+                    <td contenteditable="true">8</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Graduated Cylinder, 100ml. cap.</td>
+                    <td contenteditable="true">8</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Erlenmeyer Flask, 250ml., borosilicate</td>
+                    <td contenteditable="true">16</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">String Rod, Ø 6mm x 250mm Long</td>
+                    <td contenteditable="true">8</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Alcojhol Burner, Glass, 150ml., cap.</td>
+                    <td contenteditable="true">8</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Graduated Cylinder, 10ml. cap.</td>
+                    <td contenteditable="true">8</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Wash Bottle, Plastic, 250ml</td>
+                    <td contenteditable="true">16</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Beral Pipette Dropper, 1ml. cap.</td>
+                    <td contenteditable="true">16</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Syringe, Plastic, w/out Needle, 20ml</td>
+                    <td contenteditable="true">10</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Gentian Violet, 100ml/bottle</td>
+                    <td contenteditable="true">2</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Iodine Solution, 100ml/bottle</td>
+                    <td contenteditable="true">2</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Bromthymol Blue, 100ml/bottle</td>
+                    <td contenteditable="true">2</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Yeast, Powder, Active Dry Yeast, 100 grams/vacuum pack</td>
+                    <td contenteditable="true">2</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Scientific Calculator</td>
+                    <td contenteditable="true">8</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Graphing  Calculator</td>
+                    <td contenteditable="true">8</td>
+                    <td contenteditable="true">Operational and in Good Condition</td>
+                </tr>
+            </tbody>
+        </table>
+        <footer>
+            <div class="contact-info">
+                <div class="contact-item2">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Masagana,Pandi,Bulacan,philippines</span>
                 </div>
-                 <div class="h1"><h1>SCIENCE AND MATH EQUIPMENT</h1></div>
-                
-                <table id="inventoryTable">
-                    <thead>
-                    <tr>
-                            <th>Item Name</th>
-                            <th>Quantity</th>
-                            <th>Condition</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td contenteditable="false"><b>SCIENCE AND MATH EQUIPMENT</b></td>
-                            <td contenteditable="false"></td>
-                            <td contenteditable="false"></td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Hand Lens, 10x Magnification</td>
-                            <td contenteditable="false">8</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Hand Lens, at least 5x Magnification</td>
-                            <td contenteditable="false">16</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Rock Samples Box with Minerals of 3 Rock types</td>
-                            <td contenteditable="false">2</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Balance, Triple Beam, 2610g cap.</td>
-                            <td contenteditable="false">9</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Cork Stopper for Ø 16mm Test Tube</td>
-                            <td contenteditable="false">40</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Rubber Stopper for Ø 16mm Test Tube</td>
-                            <td contenteditable="false">40</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Rubber Stopper #6 with 2 Holes</td>
-                            <td contenteditable="false">16</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Filter Paper, ordinary, 24" by 24" (600mm by 600mm) Sheet</td>
-                            <td contenteditable="false">25</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Litmus Paper Strips, Blue, 100's/vial</td>
-                            <td contenteditable="false">2</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Litmus Paper Strips, Red, 100's/vial</td>
-                            <td contenteditable="false">2</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Hand Gloves, Acid/Solvent-resistant, Super Nitrlle</td>
-                            <td contenteditable="false">16</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Safety Goggles, Polycarbonate</td>
-                            <td contenteditable="false">16</td>
-                            <td contenteditable="false">Not Delivered</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Microscope, Compound</td>
-                            <td contenteditable="false">16</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Dissecting Tool Set</td>
-                            <td contenteditable="false">8</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Model, Human Torso</td>
-                            <td contenteditable="false">1</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Glass Slides, 72's Box</td>
-                            <td contenteditable="false">2</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Glass Cover Slips, 100's Box</td>
-                            <td contenteditable="false">2</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Test Tube, Ø 16mm x 150mm long, borosilicate</td>
-                            <td contenteditable="false">40</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Evaporating Dish, 75ml. cap.</td>
-                            <td contenteditable="false">8</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Glass Funnel</td>
-                            <td contenteditable="false">8</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Petri Dish</td>
-                            <td contenteditable="false">40</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Beaker, 250ml., borosilicate</td>
-                            <td contenteditable="false">16</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Alcohol Thermometer, -20°C to 110°C</td>
-                            <td contenteditable="false">8</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Graduated Cylinder, 100ml. cap.</td>
-                            <td contenteditable="false">8</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Erlenmeyer Flask, 250ml., borosilicate</td>
-                            <td contenteditable="false">16</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">String Rod, Ø 6mm x 250mm Long</td>
-                            <td contenteditable="false">8</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Alcojhol Burner, Glass, 150ml., cap.</td>
-                            <td contenteditable="false">8</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Graduated Cylinder, 10ml. cap.</td>
-                            <td contenteditable="false">8</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Wash Bottle, Plastic, 250ml</td>
-                            <td contenteditable="false">16</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Beral Pipette Dropper, 1ml. cap.</td>
-                            <td contenteditable="false">16</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Syringe, Plastic, w/out Needle, 20ml</td>
-                            <td contenteditable="false">10</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Gentian Violet, 100ml/bottle</td>
-                            <td contenteditable="false">2</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Iodine Solution, 100ml/bottle</td>
-                            <td contenteditable="false">2</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Bromthymol Blue, 100ml/bottle</td>
-                            <td contenteditable="false">2</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Yeast, Powder, Active Dry Yeast, 100 grams/vacuum pack</td>
-                            <td contenteditable="false">2</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Scientific Calculator</td>
-                            <td contenteditable="false">8</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                        <tr>
-                            <td contenteditable="false">Graphing  Calculator</td>
-                            <td contenteditable="false">8</td>
-                            <td contenteditable="false">Operational and in Good Condition</td>                        
-                        </tr>
-                    </tbody>
-                </table>
-            </body>
-<footer>
-       <div class="contact-info">
-        <div class="contact-item2">
-          <i class="fas fa-map-marker-alt"></i>
-          <span>Masagana,Pandi,Bulacan,philippines</span>
-        </div>
-        <div class="contact-item2">
-          <i class="fas fa-phone"></i>
-          <span>044-7690180/7695705</span>
-        </div>
-       <div class="contact-item2">
-         <i class="fas fa-envelope"></i>
-         <span>300729@deped.gov.ph</span>
-        </div>
-         <div class="contact-item2">
-          <i class="fab fa-facebook"></i>
-          <span>Deped Tayo - Masagana High School</span>
-        </div>
-      </div>
-      <p>&copy; 2026 Masagana High School. All rights reserved</p>
-     </footer> 
-
+                <div class="contact-item2">
+                    <i class="fas fa-phone"></i>
+                    <span>044-7690180/7695705</span>
+                </div>
+                <div class="contact-item2">
+                    <i class="fas fa-envelope"></i>
+                    <span>300729@deped.gov.ph</span>
+                </div>
+                <div class="contact-item2">
+                    <i class="fab fa-facebook"></i>
+                    <span>Deped Tayo - Masagana High School</span>
+                </div>
+            </div>
+            <p>&copy; 2026 Masagana High School. All rights reserved</p>
+        </footer>
+    </body>
 </html>
-
-
